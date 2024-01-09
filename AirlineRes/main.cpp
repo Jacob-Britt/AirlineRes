@@ -1,3 +1,4 @@
+//airline reservation system capacity 10 seats 
 
 
 #include <iostream>
