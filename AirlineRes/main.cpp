@@ -56,3 +56,5 @@ static int printBoardPass(passenger* passengerArray, int size)
 
 
 //function to make sure seat is not taken - danny
+
+
