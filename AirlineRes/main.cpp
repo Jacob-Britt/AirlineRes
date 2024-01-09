@@ -1,15 +1,12 @@
-//airline reservation system capacity 10 seats 
+//airline reservation system capacity 10 seats
+// 2024-01-09
+// Version 1.0
+// Author's: Danny, Logan and Jacob
 
 
 #include <iostream>
 #include <string>
 #include <fstream>
-
-//menu function - logan
-//add new passenger check for seat availability if not print message saying flight is full add to waitlist if user want to be added to second class instead if seat avalible  - danny
-//waitlist function - logan
-//print boarding pass to txt file BoardingPass.txt - jacob
-//function to make sure seat is not taken - danny
 
 using namespace std;
 
@@ -25,6 +22,24 @@ struct passenger
 passenger passengerArray[10];
 
 
+// Function Prototypes
+void countSeatLevels(passenger* passengerArray, int size, int& firstClassCount, int& economyCount);
+static int printBoardPass(passenger* passengerArray, int size);
+static int waitlist(passenger* passengerArray, int size);
+
+// Function to assign seat to passenger
+bool assignSeat(passenger* passengerArray, int size, string seatLevel, passenger newPassenger) {
+    for (int i = 0; i < size; i++) {
+        if (passengerArray[i].seatLevel.empty()) {
+            passengerArray[i] = newPassenger;
+            passengerArray[i].seatLevel = seatLevel;
+            return true;
+        }
+    }
+    return false;
+}
+
+// Function to print out the boarding pass into the file
 int main() {
 	int classLevel;
 	// Diplays menu and asks user for seat level
@@ -33,15 +48,20 @@ int main() {
 	cout << "Please input 1 for First class or 2 for Economy: " << endl;
 	cin >> classLevel;
 	// Checks what level the user inputs
-	if (classLevel == 1) {
-		// Head to function that deals with assigning seats for First Class
-	}
-	else if (classLevel == 2) {
-		// Head to function that deals with assigning seats for Economy
-	}
-	else {
-		cout << "That is not a valid seat level";
-	}
+    if (classLevel == 1 || classLevel == 2) {
+        passenger newPassenger;
+        
+        bool seatAssigned = assignSeat(passengerArray, 10, to_string(classLevel), newPassenger);
+        if (seatAssigned) {
+            cout << "Seat has been assigned." << endl;
+        } else {
+            cout << "No seats are available at the given level." << endl;
+
+        }
+    } else {
+        cout << "That is not a valid seat level";
+    }
+
 
 }
 
@@ -87,3 +107,19 @@ static int waitlist(passenger* passengerArray, int size) {
 	cout << "Next flight leaves in 3 hours";
 	return 0;
 }
+
+
+void countSeatLevels(passenger* passengerArray, int size, int& firstClassCount, int& economyCount) {
+	firstClassCount = 0;
+	economyCount = 0;
+
+	for (int i = 0; i < size; i++) {
+		if (passengerArray[i].seatLevel == "1") {
+			firstClassCount++;
+		}
+		else if (passengerArray[i].seatLevel == "2") {
+			economyCount++;
+		}
+	}
+}
+
