@@ -5,6 +5,14 @@
 using namespace std;
 
 //struct for passenger seat level, econmy or first class, first, birthdate, last name , seat number - jacob
+struct passenger
+{
+	string firstName;
+	string lastName;
+	string birthDate;
+	string seatNumber;
+	string seatLevel;
+};
 
 
 //functions
