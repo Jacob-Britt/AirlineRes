@@ -49,20 +49,34 @@ int main() {
 	cin >> classLevel;
 	// Checks what level the user inputs
     if (classLevel == 1 || classLevel == 2) {
-        passenger newPassenger;
-        
-        bool seatAssigned = assignSeat(passengerArray, 10, to_string(classLevel), newPassenger);
-        if (seatAssigned) {
-            cout << "Seat has been assigned." << endl;
-        } else {
-            cout << "No seats are available at the given level." << endl;
+    passenger newPassenger;
+    cout << "Enter first name: ";
+    cin >> newPassenger.firstName;
+    cout << "Enter last name: ";
+    cin >> newPassenger.lastName;
+    cout << "Enter birth date: ";
+    cin >> newPassenger.birthDate;
+    // Seat number will be assigned when the seat is assigned
+    newPassenger.seatNumber = "";
 
-        }
+    bool seatAssigned = assignSeat(passengerArray, 10, to_string(classLevel), newPassenger);
+    if (seatAssigned) {
+        cout << "Seat has been assigned." << endl;
     } else {
-        cout << "That is not a valid seat level";
+        cout << "No seats are available at the given level." << endl;
     }
+} else {
+    cout << "That is not a valid seat level";
+}
+	int firstClassCount;
+	int economyCount;
+	countSeatLevels(passengerArray, 10, firstClassCount, economyCount);
+	cout << "First class seats remaining: " << 5 - firstClassCount << endl;
+	cout << "Economy seats remaining: " << 5 - economyCount << endl;
 
-
+	printBoardPass(passengerArray, 10);
+	waitlist(passengerArray, 10);
+	return 0;
 }
 
 // Function to print out the boarding pass into the file
