@@ -18,6 +18,12 @@ struct passenger
 	string seatLevel;
 };
 
+//passenger array - jacob
+passenger passengerArray[10];
+
+//function prototypes - jacob
+static int printBoardPass(passenger* passengerArray, int size);
+
 
 //functions
 
