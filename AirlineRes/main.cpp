@@ -4,8 +4,6 @@
 
 using namespace std;
 
-const int MAX_SEATS = 10;
-
 class passenger {
 public:
     string firstName;
@@ -74,7 +72,7 @@ void boardingImport(passenger* passengerArray, int& passengerIndex, const string
         cout << endl;
 
         passengerIndex++;
-        if (passengerIndex >= MAX_SEATS) { // Assuming a maximum of 10 passengers
+        if (passengerIndex >= 10) { // Assuming a maximum of 10 passengers
             break;
         }
     }
@@ -158,7 +156,7 @@ void countSeatLevels(passenger* passengerArray, int size, int& firstClassCount, 
 }
 
 int main() {
-    passenger passengerArray[MAX_SEATS];
+    passenger passengerArray[10];
     int passengerIndex = 0;
     int firstClassNum = 0;
     int secondClassNum = 0;
@@ -183,19 +181,19 @@ int main() {
 
         if (classLevel == 1) {
             firstClassNum++;
+            passenger newPassenger;
+            cout << "Enter first name: ";
+            cin >> newPassenger.firstName;
+            cout << "Enter last name: ";
+            cin >> newPassenger.lastName;
+            cout << "Enter birth date: ";
+            cin >> newPassenger.birthDate;
             if (firstClassNum <= 5) {
-                passenger newPassenger;
-                cout << "Enter first name: ";
-                cin >> newPassenger.firstName;
-                cout << "Enter last name: ";
-                cin >> newPassenger.lastName;
-                cout << "Enter birth date: ";
-                cin >> newPassenger.birthDate;
                 // Seat number will be assigned when the seat is assigned
                 newPassenger.seatNumber = Fseat;
                 Fseat++;
 
-                bool seatAssigned = assignSeat(passengerArray, MAX_SEATS, to_string(classLevel), newPassenger);
+                bool seatAssigned = assignSeat(passengerArray, 10, to_string(classLevel), newPassenger);
                 if (seatAssigned) {
                     cout << "Seat has been assigned." << endl;
                 }
@@ -208,7 +206,8 @@ int main() {
                     waitlist(passengerArray, counter);
                 }
                 else if (choice == "N" || choice == "n") {
-                    cout << "Well, GET OUT OF MY AIRPORT!";
+                    cout << "Well, GET OUT OF MY AIRPORT!" << endl;
+                    addPassenger = false;
                 }
                 else {
                     cout << "Not A Choice";
@@ -218,19 +217,19 @@ int main() {
         }
         else if (classLevel == 2) {
             secondClassNum++;
+            passenger newPassenger;
+            cout << "Enter first name: ";
+            cin >> newPassenger.firstName;
+            cout << "Enter last name: ";
+            cin >> newPassenger.lastName;
+            cout << "Enter birth date: ";
+            cin >> newPassenger.birthDate;
             if (secondClassNum <= 5) {
-                passenger newPassenger;
-                cout << "Enter first name: ";
-                cin >> newPassenger.firstName;
-                cout << "Enter last name: ";
-                cin >> newPassenger.lastName;
-                cout << "Enter birth date: ";
-                cin >> newPassenger.birthDate;
                 // Seat number will be assigned when the seat is assigned
                 newPassenger.seatNumber = ESeat;
                 ESeat++;
 
-                bool seatAssigned = assignSeat(passengerArray, MAX_SEATS, to_string(classLevel), newPassenger);
+                bool seatAssigned = assignSeat(passengerArray, 10, to_string(classLevel), newPassenger);
                 if (seatAssigned) {
                     cout << "Seat has been assigned." << endl;
                 }
@@ -239,12 +238,12 @@ int main() {
                 cout << "No seats are available at the given level." << endl;
                 cout << "Would you like to be pput on a waitlist? (Y/N)" << endl;
                 cin >> choice;
-                if (choice == "Y" || "y") {
+                if (choice == "Y" || choice == "y") {
                     waitlist(passengerArray, counter);
                 }
                 else if (choice == "N" || choice == "n") {
-                    cout << "Well, GET OUT OF MY AIRPORT!";
-                    // Need a exit statement here
+                    cout << "Well, GET OUT OF MY AIRPORT!" << endl;
+                    addPassenger = false;
                 }
                 else {
                     cout << "Not A Choice";
