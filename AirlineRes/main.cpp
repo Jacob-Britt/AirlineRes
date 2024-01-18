@@ -1,31 +1,85 @@
-//airline reservation system capacity 10 seats
-// 2024-01-09
-// Version 1.0
-// Author's: Danny, Logan and Jacob
-
-
 #include <iostream>
-#include <string>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
-struct passenger
-{
-	string firstName;
-	string lastName;
-	string birthDate;
-	string seatNumber;
-	string seatLevel;
+const int MAX_SEATS = 10;
+
+class passenger {
+public:
+    string firstName;
+    string lastName;
+    string birthDate;
+    int seatNumber;
+    string seatLevel;
+
+    string getFirName() {
+        return firstName;
+    }
+
+    void setFirName(string newFirName) {
+        firstName = newFirName;
+    }
+
+    string getLasName() {
+        return lastName;
+    }
+
+    void setLasName(string newLasName) {
+        lastName = newLasName;
+    }
+
+    string getBirth() {
+        return birthDate;
+    }
+
+    void setBirth(string newBirth) {
+        birthDate = newBirth;
+    }
+
+    string getLevel() {
+        return seatLevel;
+    }
+
+    void setLevel(string newLevel) {
+        seatLevel = newLevel;
+    }
 };
 
-passenger passengerArray[10];
+// Function to import boarding pass data from a file
+void boardingImport(passenger* passengerArray, int& passengerIndex, const string& filename) {
+    ifstream inFile(filename);
+    if (!inFile) {
+        // create boardingpass.txt if it does not exist
+        cout << "Error, " << filename << " does not exist. Creating file now..." << endl;
+        ofstream outFile(filename);
+        return;
+    }
 
+    string line;
+    while (getline(inFile, line)) {
+        // Assuming each passenger's details are in order and on separate lines check if information is empty and exclude it
+        passengerArray[passengerIndex].firstName = line;
+        getline(inFile, passengerArray[passengerIndex].lastName);
+        getline(inFile, passengerArray[passengerIndex].birthDate);
+        //getline(inFile, passengerArray[passengerIndex].seatNumber);
+        getline(inFile, passengerArray[passengerIndex].seatLevel);
 
-// Function Prototypes
-void countSeatLevels(passenger* passengerArray, int size, int& firstClassCount, int& economyCount);
-static int printBoardPass(passenger* passengerArray, int size);
-static int waitlist(passenger* passengerArray, int size);
+        //display the boarding pass
+        cout << "Name: " << passengerArray[passengerIndex].firstName << " " << passengerArray[passengerIndex].lastName << endl;
+        cout << "Birthdate: " << passengerArray[passengerIndex].birthDate << endl;
+        cout << "Seat Number: " << passengerArray[passengerIndex].seatNumber << endl;
+        cout << "Seat Level: " << passengerArray[passengerIndex].seatLevel << endl;
+        cout << endl;
+
+        passengerIndex++;
+        if (passengerIndex >= MAX_SEATS) { // Assuming a maximum of 10 passengers
+            break;
+        }
+    }
+    inFile.close();
+}
 
 // Function to assign seat to passenger
 bool assignSeat(passenger* passengerArray, int size, string seatLevel, passenger newPassenger) {
@@ -40,100 +94,177 @@ bool assignSeat(passenger* passengerArray, int size, string seatLevel, passenger
 }
 
 // Function to print out the boarding pass into the file
-int main() {
-	int classLevel;
-	// Diplays menu and asks user for seat level
-	cout << "Welcome to Interesting name Airline" << endl;
-	cout << "We aim to give you a better Flight Experience" << endl;
-	cout << "Please input 1 for First class or 2 for Economy: " << endl;
-	cin >> classLevel;
-	// Checks what level the user inputs
-    if (classLevel == 1 || classLevel == 2) {
-    passenger newPassenger;
-    cout << "Enter first name: ";
-    cin >> newPassenger.firstName;
-    cout << "Enter last name: ";
-    cin >> newPassenger.lastName;
-    cout << "Enter birth date: ";
-    cin >> newPassenger.birthDate;
-    // Seat number will be assigned when the seat is assigned
-    newPassenger.seatNumber = "";
-
-    bool seatAssigned = assignSeat(passengerArray, 10, to_string(classLevel), newPassenger);
-    if (seatAssigned) {
-        cout << "Seat has been assigned." << endl;
-    } else {
-        cout << "No seats are available at the given level." << endl;
+int printBoardPass(passenger* passengerArray, int counter) {
+    ofstream outFile("BoardingPass.txt", ios::app);
+    if (outFile.fail()) {
+        cout << "Error opening file" << endl;
+        exit(1);
     }
-} else {
-    cout << "That is not a valid seat level";
-}
-	int firstClassCount;
-	int economyCount;
-	countSeatLevels(passengerArray, 10, firstClassCount, economyCount);
-	cout << "First class seats remaining: " << 5 - firstClassCount << endl;
-	cout << "Economy seats remaining: " << 5 - economyCount << endl;
 
-	printBoardPass(passengerArray, 10);
-	waitlist(passengerArray, 10);
-	return 0;
-}
+    for (int i = 0; i < counter - 1; i++) {
+        cout << endl;
+        cout << "+====+====+====+====+====+====+====+" << endl;
+        cout << "Name: " << passengerArray[i].firstName << " " << passengerArray[i].lastName << endl;
+        cout << "Birthdate: " << passengerArray[i].birthDate << endl;
+        cout << "Seat Number: " << passengerArray[i].seatNumber << endl;
+        cout << "Seat Level: " << passengerArray[i].seatLevel << endl;
+        cout << "+====+====+====+====+====+====+====+" << endl;
+        cout << endl;
+        outFile << "Name: " << passengerArray[i].firstName << " " << passengerArray[i].lastName << endl;
+        outFile << "Birthdate: " << passengerArray[i].birthDate << endl;
+        outFile << "Seat Number: " << passengerArray[i].seatNumber << endl;
+        outFile << "Seat Level: " << passengerArray[i].seatLevel << endl;
+        outFile << endl;
+    }
 
-// Function to print out the boarding pass into the file
-static int printBoardPass(passenger* passengerArray, int size)
-{
-	ofstream outFile;
-	outFile.open("BoardingPass.txt");
-	if (outFile.fail())
-	{
-		cout << "Error opening file" << endl;
-		exit(1);
-	}
-	for (int i = 0; i < size; i++)
-	{
-		outFile << "Name: " << passengerArray[i].firstName << " " << passengerArray[i].lastName << endl;
-		outFile << "Birthdate: " << passengerArray[i].birthDate << endl;
-		outFile << "Seat Number: " << passengerArray[i].seatNumber << endl;
-		outFile << "Seat Level: " << passengerArray[i].seatLevel << endl;
-		outFile << endl;
-	}
-	outFile.close();
-	return 0;
+
+    outFile.close();
+    return 0;
 }
 
 // Print out the boarding pass into a waitlist file if the user would like to be added to waitlist
-static int waitlist(passenger* passengerArray, int size) {
-	ofstream outFile;
-	outFile.open("waitlist.txt");
-	if (outFile.fail())
-	{
-		cout << "Error opening file" << endl;
-		exit(1);
-	}
-	for (int i = 0; i < size; i++)
-	{
-		outFile << "Name: " << passengerArray[i].firstName << " " << passengerArray[i].lastName << endl;
-		outFile << "Birthdate: " << passengerArray[i].birthDate << endl;
-		outFile << "Seat Level: " << passengerArray[i].seatLevel << endl;
-		outFile << endl;
-	}
-	outFile.close();
-	cout << "Next flight leaves in 3 hours";
-	return 0;
+int waitlist(passenger* passengerArray, int size) {
+    ofstream outFile("waitlist.txt");
+    if (outFile.fail()) {
+        cout << "Error, waitlist.txt does not exist. Creating file now.." << endl;
+        ofstream outFile("waitlist.txt");
+    }
+
+    for (int i = 0; i < size; i++) {
+        outFile << "Name: " << passengerArray[i].firstName << " " << passengerArray[i].lastName << endl;
+        outFile << "Birthdate: " << passengerArray[i].birthDate << endl;
+        outFile << "Seat Level: " << passengerArray[i].seatLevel << endl;
+        outFile << endl;
+    }
+
+    outFile.close();
+    cout << "Next flight leaves in 3 hours" << endl;
+    return 0;
 }
 
-
+// Function to count the number of seats in each class
 void countSeatLevels(passenger* passengerArray, int size, int& firstClassCount, int& economyCount) {
-	firstClassCount = 0;
-	economyCount = 0;
+    firstClassCount = 0;
+    economyCount = 0;
 
-	for (int i = 0; i < size; i++) {
-		if (passengerArray[i].seatLevel == "1") {
-			firstClassCount++;
-		}
-		else if (passengerArray[i].seatLevel == "2") {
-			economyCount++;
-		}
-	}
+    for (int i = 0; i < size; i++) {
+        if (passengerArray[i].seatLevel == "1") {
+            firstClassCount++;
+        }
+        else if (passengerArray[i].seatLevel == "2") {
+            economyCount++;
+        }
+    }
 }
 
+int main() {
+    passenger passengerArray[MAX_SEATS];
+    int passengerIndex = 0;
+    int firstClassNum = 0;
+    int secondClassNum = 0;
+    int counter = 0;
+    string choice;
+
+    // Import existing boarding pass data
+    //boardingImport(passengerArray, passengerIndex, "BoardingPass.txt");
+
+    int classLevel;
+    remove("BoardingPass.txt");
+    // Displays menu and asks user for seat level
+    cout << "Welcome to Interesting name Airline" << endl;
+    cout << "We aim to give you a better Flight Experience" << endl;
+
+    bool addPassenger = true;
+    int Fseat = 1;
+    int ESeat = 6;
+    do {
+        cout << "Please input 1 for First class or 2 for Economy (0 to stop): ";
+        cin >> classLevel;
+
+        if (classLevel == 1) {
+            firstClassNum++;
+            if (firstClassNum <= 5) {
+                passenger newPassenger;
+                cout << "Enter first name: ";
+                cin >> newPassenger.firstName;
+                cout << "Enter last name: ";
+                cin >> newPassenger.lastName;
+                cout << "Enter birth date: ";
+                cin >> newPassenger.birthDate;
+                // Seat number will be assigned when the seat is assigned
+                newPassenger.seatNumber = Fseat;
+                Fseat++;
+
+                bool seatAssigned = assignSeat(passengerArray, MAX_SEATS, to_string(classLevel), newPassenger);
+                if (seatAssigned) {
+                    cout << "Seat has been assigned." << endl;
+                }
+            }
+            else {
+                cout << "No seats are available at the given level." << endl;
+                cout << "Would you like to be put on a waitlist? (Y/N)" << endl;
+                cin >> choice;
+                if (choice == "Y" || choice ==  "y") {
+                    waitlist(passengerArray, counter);
+                }
+                else if (choice == "N" || choice == "n") {
+                    cout << "Well, GET OUT OF MY AIRPORT!";
+                }
+                else {
+                    cout << "Not A Choice";
+                    exit(1);
+                }
+            }
+        }
+        else if (classLevel == 2) {
+            secondClassNum++;
+            if (secondClassNum <= 5) {
+                passenger newPassenger;
+                cout << "Enter first name: ";
+                cin >> newPassenger.firstName;
+                cout << "Enter last name: ";
+                cin >> newPassenger.lastName;
+                cout << "Enter birth date: ";
+                cin >> newPassenger.birthDate;
+                // Seat number will be assigned when the seat is assigned
+                newPassenger.seatNumber = ESeat;
+                ESeat++;
+
+                bool seatAssigned = assignSeat(passengerArray, MAX_SEATS, to_string(classLevel), newPassenger);
+                if (seatAssigned) {
+                    cout << "Seat has been assigned." << endl;
+                }
+            }
+            else {
+                cout << "No seats are available at the given level." << endl;
+                cout << "Would you like to be pput on a waitlist? (Y/N)" << endl;
+                cin >> choice;
+                if (choice == "Y" || "y") {
+                    waitlist(passengerArray, counter);
+                }
+                else if (choice == "N" || choice == "n") {
+                    cout << "Well, GET OUT OF MY AIRPORT!";
+                    // Need a exit statement here
+                }
+                else {
+                    cout << "Not A Choice";
+                    exit(1);
+                }
+            }
+        }
+        else if (classLevel == 0) {
+            addPassenger = false;
+        }
+        else {
+            cout << "That is not a valid seat level" << endl;
+        }
+        counter++;
+    } while (addPassenger);
+
+    cout << "First class seats remaining: " << 5 - firstClassNum << endl;
+    cout << "Economy seats remaining: " << 5 - secondClassNum << endl;
+
+    printBoardPass(passengerArray, counter);
+
+    return 0;
+}

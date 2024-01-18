@@ -1,38 +1,26 @@
-Name: jacob britton
-Birthdate: 2
+Name: dfg dfg
+Birthdate: dfg
 Seat Level: 1
 
-Name:  
-Birthdate: 
-Seat Level: 
+Name: dfg dfg
+Birthdate: dfg
+Seat Level: 1
 
-Name:  
-Birthdate: 
-Seat Level: 
+Name: fdf dfg
+Birthdate: dfg
+Seat Level: 1
 
-Name:  
-Birthdate: 
-Seat Level: 
+Name: dfg dfg
+Birthdate: dfg
+Seat Level: 2
 
-Name:  
-Birthdate: 
-Seat Level: 
+Name: dfg dfg
+Birthdate: dfg
+Seat Level: 1
 
-Name:  
-Birthdate: 
-Seat Level: 
-
-Name:  
-Birthdate: 
-Seat Level: 
-
-Name:  
-Birthdate: 
-Seat Level: 
-
-Name:  
-Birthdate: 
-Seat Level: 
+Name: dfg dfg
+Birthdate: dfg
+Seat Level: 1
 
 Name:  
 Birthdate: 
