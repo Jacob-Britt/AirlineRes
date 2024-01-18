@@ -11,8 +11,9 @@ public:
     string firstName;
     string lastName;
     string birthDate;
-    int seatNumber;
+    int seatNumber = 0; // Initialize seatNumber to 0
     string seatLevel;
+
 
     string getFirName() {
         return firstName;
@@ -45,39 +46,53 @@ public:
     void setLevel(string newLevel) {
         seatLevel = newLevel;
     }
+
+
 };
 
 // Function to import boarding pass data from a file
 void boardingImport(passenger* passengerArray, int& passengerIndex, const string& filename) {
     ifstream inFile(filename);
     if (!inFile) {
-        // create boardingpass.txt if it does not exist
-        cout << "Error, " << filename << " does not exist. Creating file now..." << endl;
-        ofstream outFile(filename);
+        // File does not exist, no need to create it here
+        cout << "Error, " << filename << " does not exist." << endl;
         return;
     }
 
     string line;
+    
+    // Read in the data from the file
     while (getline(inFile, line)) {
-        // Assuming each passenger's details are in order and on separate lines check if information is empty and exclude it
-        passengerArray[passengerIndex].firstName = line;
-        getline(inFile, passengerArray[passengerIndex].lastName);
-        getline(inFile, passengerArray[passengerIndex].birthDate);
-        //getline(inFile, passengerArray[passengerIndex].seatNumber);
-        getline(inFile, passengerArray[passengerIndex].seatLevel);
+        if (line.find("Name: ") != string::npos) {
+			// Found the name
+			string name = line.substr(6);
+			int spaceIndex = name.find(" ");
+			string firstName = name.substr(0, spaceIndex);
+			string lastName = name.substr(spaceIndex + 1);
 
-        //display the boarding pass
-        cout << "Name: " << passengerArray[passengerIndex].firstName << " " << passengerArray[passengerIndex].lastName << endl;
-        cout << "Birthdate: " << passengerArray[passengerIndex].birthDate << endl;
-        cout << "Seat Number: " << passengerArray[passengerIndex].seatNumber << endl;
-        cout << "Seat Level: " << passengerArray[passengerIndex].seatLevel << endl;
-        cout << endl;
+			passengerArray[passengerIndex].firstName = firstName;
+			passengerArray[passengerIndex].lastName = lastName;
+		}
+        else if (line.find("Birthdate: ") != string::npos) {
+			// Found the birthdate
+			string birthdate = line.substr(11);
+			passengerArray[passengerIndex].birthDate = birthdate;
+		}
+        else if (line.find("Seat Number: ") != string::npos) {
+			// Found the seat number
+			string seatNumber = line.substr(13);
+			passengerArray[passengerIndex].seatNumber = stoi(seatNumber);
+		}
+        else if (line.find("Seat Level: ") != string::npos) {
+			// Found the seat level
+			string seatLevel = line.substr(12);
+			passengerArray[passengerIndex].seatLevel = seatLevel;
+			passengerIndex++;
+		}
+	}
+    
 
-        passengerIndex++;
-        if (passengerIndex >= MAX_SEATS) { // Assuming a maximum of 10 passengers
-            break;
-        }
-    }
+        
     inFile.close();
 }
 
@@ -110,13 +125,16 @@ int printBoardPass(passenger* passengerArray, int counter) {
         cout << "Seat Level: " << passengerArray[i].seatLevel << endl;
         cout << "+====+====+====+====+====+====+====+" << endl;
         cout << endl;
+
+        outFile << endl;
+        outFile << "+====+====+====+====+====+====+====+" << endl;
         outFile << "Name: " << passengerArray[i].firstName << " " << passengerArray[i].lastName << endl;
         outFile << "Birthdate: " << passengerArray[i].birthDate << endl;
         outFile << "Seat Number: " << passengerArray[i].seatNumber << endl;
         outFile << "Seat Level: " << passengerArray[i].seatLevel << endl;
+        outFile << "+====+====+====+====+====+====+====+" << endl;
         outFile << endl;
     }
-
 
     outFile.close();
     return 0;
@@ -166,10 +184,10 @@ int main() {
     string choice;
 
     // Import existing boarding pass data
-    //boardingImport(passengerArray, passengerIndex, "BoardingPass.txt");
-
+    boardingImport(passengerArray, passengerIndex, "BoardingPass.txt");
+    
     int classLevel;
-    remove("BoardingPass.txt");
+//    remove("BoardingPass.txt");
     // Displays menu and asks user for seat level
     cout << "Welcome to Interesting name Airline" << endl;
     cout << "We aim to give you a better Flight Experience" << endl;
