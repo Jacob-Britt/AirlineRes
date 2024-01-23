@@ -10,19 +10,20 @@ Name: fdf dfg
 Birthdate: dfg
 Seat Level: 1
 
+<<<<<<< Updated upstream
 Name: dfg dfg
 Birthdate: dfg
 Seat Level: 2
 
 Name: dfg dfg
 Birthdate: dfg
+=======
+Name: 1 1
+Birthdate: 1
+>>>>>>> Stashed changes
 Seat Level: 1
 
 Name: dfg dfg
 Birthdate: dfg
 Seat Level: 1
-
-Name:  
-Birthdate: 
-Seat Level: 
 
