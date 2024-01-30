@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -47,8 +48,35 @@ public:
     }
 };
 
+
+class BoardingPassenger : public passenger {
+public:
+    string boardingTime;
+
+    string getBoardingTime() {
+        return boardingTime;
+    }
+
+    void setBoardingTime(string newBoardingTime) {
+        boardingTime = newBoardingTime;
+    }
+};
+
+class WaitlistPassenger : public passenger {
+public:
+    int waitlistPosition;
+
+    int getWaitlistPosition() {
+        return waitlistPosition;
+    }
+
+    void setWaitlistPosition(int newPosition) {
+        waitlistPosition = newPosition;
+    }
+};
+
 // Function to import boarding pass data from a file
-void boardingImport(passenger* passengerArray, int& passengerIndex, const string& filename) {
+void boardingImport(BoardingPassenger* boardingPassengerArray, WaitlistPassenger* waitlistPassengerArray, int& passengerIndex, const string& filename) {
     ifstream inFile(filename);
     if (!inFile) {
         // create boardingpass.txt if it does not exist
@@ -57,28 +85,34 @@ void boardingImport(passenger* passengerArray, int& passengerIndex, const string
         return;
     }
 
+    // Read data from file and store in boardingPassengerArray and waitlistPassengerArray
     string line;
     while (getline(inFile, line)) {
-        // Assuming each passenger's details are in order and on separate lines check if information is empty and exclude it
-        passengerArray[passengerIndex].firstName = line;
-        getline(inFile, passengerArray[passengerIndex].lastName);
-        getline(inFile, passengerArray[passengerIndex].birthDate);
-        //getline(inFile, passengerArray[passengerIndex].seatNumber);
-        getline(inFile, passengerArray[passengerIndex].seatLevel);
+        stringstream ss(line);
+        string firstName, lastName, boardingTime;
+        int waitlistPosition;
 
-        //display the boarding pass
-        cout << "Name: " << passengerArray[passengerIndex].firstName << " " << passengerArray[passengerIndex].lastName << endl;
-        cout << "Birthdate: " << passengerArray[passengerIndex].birthDate << endl;
-        cout << "Seat Number: " << passengerArray[passengerIndex].seatNumber << endl;
-        cout << "Seat Level: " << passengerArray[passengerIndex].seatLevel << endl;
-        cout << endl;
+        // Assuming the file format is: firstName, lastName, boardingTime, waitlistPosition
+        getline(ss, firstName, ',');
+        getline(ss, lastName, ',');
+        getline(ss, boardingTime, ',');
+        ss >> waitlistPosition;
 
-        passengerIndex++;
-        if (passengerIndex >= MAX_SEATS) { // Assuming a maximum of 10 passengers
-            break;
+        // Create a BoardingPassenger or WaitlistPassenger based on the data
+        if (!boardingTime.empty()) {
+            BoardingPassenger bp;
+            bp.setFirName(firstName);
+            bp.setLasName(lastName);
+            bp.setBoardingTime(boardingTime); // Fix: Change the access specifier of setBoardingTime to public
+            boardingPassengerArray[passengerIndex++] = bp;
+        } else if (waitlistPosition != 0) {
+            WaitlistPassenger wp;
+            wp.setFirName(firstName);
+            wp.setLasName(lastName);
+            wp.setWaitlistPosition(waitlistPosition);
+            waitlistPassengerArray[passengerIndex++] = wp;
         }
     }
-    inFile.close();
 }
 
 // Function to assign seat to passenger
